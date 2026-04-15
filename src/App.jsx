@@ -273,14 +273,13 @@ function normalizeWord(raw) {
 function parseDictionary(text) {
   return Array.from(
     new Set(
-text
-  .split(/\r?\n/)
-  .map((w) => normalizeWord(w.trim()))
+      text
+        .split(/\r?\n/)
+        .map((w) => normalizeWord(w.trim()))
         .filter((w) => w.length >= 2)
     )
   ).sort((a, b) => a.localeCompare(b, "de"));
 }
-
 function createEmptyBoard() {
   return Array.from({ length: BOARD_SIZE }, () =>
     Array.from({ length: BOARD_SIZE }, () => ({ letter: EMPTY, blank: false }))
