@@ -23,6 +23,12 @@ STUHL
 LAMPE
 `;
 
+function createEmptyBoard() {
+  return Array.from({ length: 15 }, () =>
+    Array.from({ length: 15 }, () => "")
+  );
+}
+
 function normalizeWord(raw) {
   return raw.toUpperCase().replace(/[^A-ZÄÖÜ?]/g, "");
 }
