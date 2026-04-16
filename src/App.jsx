@@ -56,8 +56,15 @@ export default function App() {
   const dictionary = useMemo(() => parseDictionary(dictionaryText), [dictionaryText]);
 
   function analyze() {
-  const moves = findMoves(board, dictionary, rack);
-  setResults(moves);
+    const moves = findMoves(board, dictionary, rack);
+    setResults(moves);
+  }
+
+  return (
+    <div>
+      {/* dein UI */}
+    </div>
+  );
 }
 
   function updateCell(r, c, value) {
