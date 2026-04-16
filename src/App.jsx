@@ -187,7 +187,6 @@ function findMoves(board, dictionary, rack) {
   return score;
 }
   
-  return moves.sort((a, b) => b.score - a.score).slice(0, 3);
 }
   return (
     <div style={{ padding: 20, fontFamily: "Arial", background: "#111", color: "white" }}>
