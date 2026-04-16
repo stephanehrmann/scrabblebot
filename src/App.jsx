@@ -72,12 +72,6 @@ function updateCell(r, c, value) {
   setBoard(newBoard);
 }
   
-  <div>
-      {/* dein UI */}
-    </div>
-  );
-}
-
   function loadImage(e) {
     const file = e.target.files[0];
     if (file) setImage(URL.createObjectURL(file));
