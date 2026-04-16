@@ -72,6 +72,52 @@ export default function App() {
     if (file) setImage(URL.createObjectURL(file));
   }
 
+  function canBuildWord(word, rack) {
+  const rackArr = rack.split("");
+  for (let letter of word) {
+    const idx = rackArr.indexOf(letter);
+    if (idx === -1) return false;
+    rackArr.splice(idx, 1);
+  }
+  return true;
+}
+
+function findMoves(board, dictionary, rack) {
+  const moves = [];
+
+  for (let word of dictionary) {
+    if (!canBuildWord(word, rack)) continue;
+
+    for (let r = 0; r < 15; r++) {
+      for (let c = 0; c < 15; c++) {
+        // horizontal testen
+        if (c + word.length <= 15) {
+          let fits = true;
+
+          for (let i = 0; i < word.length; i++) {
+            const existing = board[r][c + i];
+            if (existing && existing !== word[i]) {
+              fits = false;
+              break;
+            }
+          }
+
+          if (fits) {
+            moves.push({
+              word,
+              row: r,
+              col: c,
+              dir: "H",
+              score: word.length // später ersetzen wir das
+            });
+          }
+        }
+      }
+    }
+  }
+
+  return moves.sort((a, b) => b.score - a.score).slice(0, 3);
+}
   return (
     <div style={{ padding: 20, fontFamily: "Arial", background: "#111", color: "white" }}>
       <h1>Scrabblebot V2</h1>
