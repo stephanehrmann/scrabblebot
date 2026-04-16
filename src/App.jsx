@@ -52,7 +52,6 @@ function createEmptyBoard() {
 }
 
 export default function App() {
-  // states
   const [board, setBoard] = useState(createEmptyBoard());
   const [rack, setRack] = useState("");
   const [dictionaryText, setDictionaryText] = useState(DEMO_WORDS);
@@ -67,19 +66,125 @@ export default function App() {
     setResults(moves);
   }
 
-  function updateCell(r, c, value) {
-    const newBoard = board.map(row => [...row]);
-    newBoard[r][c] = value.toUpperCase();
-    setBoard(newBoard);
-  }
-
+function updateCell(r, c, value) {
+  const newBoard = board.map(row => [...row]);
+  newBoard[r][c] = value.toUpperCase();
+  setBoard(newBoard);
+}
+  
   function loadImage(e) {
     const file = e.target.files[0];
     if (file) setImage(URL.createObjectURL(file));
   }
 
-  // 👉 HIER beginnt das UI
-  return (
+  function canBuildWord(word, rack) {
+  const rackArr = rack.split("");
+  for (let letter of word) {
+    const idx = rackArr.indexOf(letter);
+    if (idx === -1) return false;
+    rackArr.splice(idx, 1);
+  }
+  return true;
+}
+
+function findMoves(board, dictionary, rack) {
+  const moves = [];
+
+  for (let word of dictionary) {
+    for (let r = 0; r < 15; r++) {
+      for (let c = 0; c < 15; c++) {
+
+        // horizontal
+        if (c + word.length <= 15) {
+          let fits = true;
+          let usedRack = rack.split("");
+          let usesExisting = false;
+          let placed = 0;
+
+          for (let i = 0; i < word.length; i++) {
+            const existing = board[r][c + i];
+
+            if (existing) {
+              if (existing !== word[i]) {
+                fits = false;
+                break;
+              }
+              usesExisting = true;
+            } else {
+              const idx = usedRack.indexOf(word[i]);
+              if (idx === -1) {
+                fits = false;
+                break;
+              }
+              usedRack.splice(idx, 1);
+              placed++;
+            }
+          }
+
+          // 👉 wichtige Scrabble-Regel
+          if (fits && placed > 0 && usesExisting) {
+            moves.push({
+              word,
+              row: r,
+              col: c,
+              dir: "H",
+              score: calculateScore(word)
+            });
+          }
+        }
+
+        // vertikal
+        if (r + word.length <= 15) {
+          let fits = true;
+          let usedRack = rack.split("");
+          let usesExisting = false;
+          let placed = 0;
+
+          for (let i = 0; i < word.length; i++) {
+            const existing = board[r + i][c];
+
+            if (existing) {
+              if (existing !== word[i]) {
+                fits = false;
+                break;
+              }
+              usesExisting = true;
+            } else {
+              const idx = usedRack.indexOf(word[i]);
+              if (idx === -1) {
+                fits = false;
+                break;
+              }
+              usedRack.splice(idx, 1);
+              placed++;
+            }
+          }
+
+          if (fits && placed > 0 && usesExisting) {
+            moves.push({
+              word,
+              row: r,
+              col: c,
+              dir: "V",
+              score: calculateScore(word)
+            });
+          }
+        }
+
+      }
+    }
+  }
+
+  return moves.sort((a, b) => b.score - a.score).slice(0, 3);
+}
+
+  function calculateScore(word) {
+  let score = 0;
+  for (let letter of word) {
+    score += LETTER_VALUES[letter] || 0;
+  }
+  return score;
+
     <div style={{ padding: 20, fontFamily: "Arial", background: "#111", color: "white" }}>
       <h1>Scrabblebot V2</h1>
 
@@ -133,12 +238,11 @@ export default function App() {
 
       <div style={{ marginTop: 20 }}>
         <h2>Top Züge</h2>
-
-        {results.map((r, i) => (
-          <div key={i}>
-            #{i + 1} {r.word} – {r.score} Punkte ({r.row},{r.col}) {r.dir}
-          </div>
-        ))}
+{results.map((r, i) => (
+  <div key={i}>
+    #{i+1} {r.word} – {r.score} Punkte ({r.row},{r.col}) {r.dir}
+  </div>
+))}
       </div>
 
       <textarea
@@ -148,4 +252,5 @@ export default function App() {
       />
     </div>
   );
+
 }
