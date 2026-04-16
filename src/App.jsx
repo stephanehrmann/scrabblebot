@@ -85,34 +85,92 @@ function findMoves(board, dictionary, rack) {
   const moves = [];
 
   for (let word of dictionary) {
-    if (!canBuildWord(word, rack)) continue;
-
     for (let r = 0; r < 15; r++) {
       for (let c = 0; c < 15; c++) {
-        // horizontal testen
+
+        // horizontal
         if (c + word.length <= 15) {
           let fits = true;
+          let usedRack = rack.split("");
+          let usesExisting = false;
+          let placed = 0;
 
           for (let i = 0; i < word.length; i++) {
             const existing = board[r][c + i];
-            if (existing && existing !== word[i]) {
-              fits = false;
-              break;
+
+            if (existing) {
+              if (existing !== word[i]) {
+                fits = false;
+                break;
+              }
+              usesExisting = true;
+            } else {
+              const idx = usedRack.indexOf(word[i]);
+              if (idx === -1) {
+                fits = false;
+                break;
+              }
+              usedRack.splice(idx, 1);
+              placed++;
             }
           }
 
-          if (fits) {
+          // 👉 wichtige Scrabble-Regel
+          if (fits && placed > 0 && usesExisting) {
             moves.push({
               word,
               row: r,
               col: c,
               dir: "H",
-score: calculateScore(word)            });
+              score: calculateScore(word)
+            });
           }
         }
+
+        // vertikal
+        if (r + word.length <= 15) {
+          let fits = true;
+          let usedRack = rack.split("");
+          let usesExisting = false;
+          let placed = 0;
+
+          for (let i = 0; i < word.length; i++) {
+            const existing = board[r + i][c];
+
+            if (existing) {
+              if (existing !== word[i]) {
+                fits = false;
+                break;
+              }
+              usesExisting = true;
+            } else {
+              const idx = usedRack.indexOf(word[i]);
+              if (idx === -1) {
+                fits = false;
+                break;
+              }
+              usedRack.splice(idx, 1);
+              placed++;
+            }
+          }
+
+          if (fits && placed > 0 && usesExisting) {
+            moves.push({
+              word,
+              row: r,
+              col: c,
+              dir: "V",
+              score: calculateScore(word)
+            });
+          }
+        }
+
       }
     }
   }
+
+  return moves.sort((a, b) => b.score - a.score).slice(0, 3);
+}
 
   function calculateScore(word) {
   let score = 0;
