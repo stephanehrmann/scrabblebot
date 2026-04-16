@@ -186,8 +186,7 @@ function findMoves(board, dictionary, rack) {
   }
   return score;
 }
-  
-}
+
   return (
     <div style={{ padding: 20, fontFamily: "Arial", background: "#111", color: "white" }}>
       <h1>Scrabblebot V2</h1>
