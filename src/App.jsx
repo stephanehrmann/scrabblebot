@@ -66,18 +66,17 @@ export default function App() {
     setResults(moves);
   }
 
-  return (
-    <div>
+function updateCell(r, c, value) {
+  const newBoard = board.map(row => [...row]);
+  newBoard[r][c] = value.toUpperCase();
+  setBoard(newBoard);
+}
+  
+  <div>
       {/* dein UI */}
     </div>
   );
 }
-
-  function updateCell(r, c, value) {
-    const newBoard = board.map((row) => [...row]);
-    newBoard[r][c] = value.toUpperCase();
-    setBoard(newBoard);
-  }
 
   function loadImage(e) {
     const file = e.target.files[0];
