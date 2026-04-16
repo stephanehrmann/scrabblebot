@@ -55,11 +55,9 @@ export default function App() {
   const dictionary = useMemo(() => parseDictionary(dictionaryText), [dictionaryText]);
 
   function analyze() {
-    const possible = dictionary.filter((word) =>
-      word.split("").every((letter) => rack.includes(letter))
-    );
-    setResults(possible.slice(0, 3));
-  }
+  const moves = findMoves(board, dictionary, rack);
+  setResults(moves);
+}
 
   function updateCell(r, c, value) {
     const newBoard = board.map((row) => [...row]);
@@ -172,9 +170,11 @@ function findMoves(board, dictionary, rack) {
 
       <div style={{ marginTop: 20 }}>
         <h2>Top Züge</h2>
-        {results.map((r, i) => (
-          <div key={i}>{r}</div>
-        ))}
+{results.map((r, i) => (
+  <div key={i}>
+    {r.word} ({r.row},{r.col}) {r.dir}
+  </div>
+))}
       </div>
 
       <textarea
