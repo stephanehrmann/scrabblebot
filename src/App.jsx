@@ -1,5 +1,12 @@
 import React, { useMemo, useRef, useState } from "react";
 
+const LETTER_VALUES = {
+  A:1, Ä:6, B:3, C:4, D:1, E:1, F:4, G:2, H:2,
+  I:1, J:6, K:4, L:2, M:3, N:1, O:2, Ö:8,
+  P:4, Q:10, R:1, S:1, T:1, U:1, Ü:6,
+  V:6, W:3, X:8, Y:10, Z:3
+};
+
 const BOARD_SIZE = 15;
 const CENTER = 7;
 
@@ -106,14 +113,21 @@ function findMoves(board, dictionary, rack) {
               row: r,
               col: c,
               dir: "H",
-              score: word.length // später ersetzen wir das
-            });
+score: calculateScore(word)            });
           }
         }
       }
     }
   }
 
+  function calculateScore(word) {
+  let score = 0;
+  for (let letter of word) {
+    score += LETTER_VALUES[letter] || 0;
+  }
+  return score;
+}
+  
   return moves.sort((a, b) => b.score - a.score).slice(0, 3);
 }
   return (
@@ -172,7 +186,7 @@ function findMoves(board, dictionary, rack) {
         <h2>Top Züge</h2>
 {results.map((r, i) => (
   <div key={i}>
-    {r.word} ({r.row},{r.col}) {r.dir}
+    #{i+1} {r.word} – {r.score} Punkte ({r.row},{r.col}) {r.dir}
   </div>
 ))}
       </div>
