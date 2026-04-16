@@ -250,4 +250,4 @@ function findMoves(board, dictionary, rack) {
       />
     </div>
   );
-}
+
