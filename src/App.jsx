@@ -185,7 +185,6 @@ function findMoves(board, dictionary, rack) {
     score += LETTER_VALUES[letter] || 0;
   }
   return score;
-}
 
   return (
     <div style={{ padding: 20, fontFamily: "Arial", background: "#111", color: "white" }}>
