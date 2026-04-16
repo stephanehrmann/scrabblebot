@@ -261,9 +261,7 @@ function parseDictionary(text) {
   return Array.from(
     new Set(
       text
-        .split(/
-?
-/)
+        split(/\\r?\\n/)
         .map((w) => normalizeWord(w.trim()))
         .filter((w) => w.length >= 2)
     )
