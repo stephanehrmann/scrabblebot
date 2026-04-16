@@ -23,11 +23,6 @@ STUHL
 LAMPE
 `;
 
-function createEmptyBoard() {
-  return Array.from({ length: 15 }, () =>
-    Array.from({ length: 15 }, () => "")
-  );
-}
 
 function normalizeWord(raw) {
   return raw.toUpperCase().replace(/[^A-ZÄÖÜ?]/g, "");
@@ -184,6 +179,7 @@ function findMoves(board, dictionary, rack) {
     score += LETTER_VALUES[letter] || 0;
   }
   return score;
+  }
 
     <div style={{ padding: 20, fontFamily: "Arial", background: "#111", color: "white" }}>
       <h1>Scrabblebot V2</h1>
